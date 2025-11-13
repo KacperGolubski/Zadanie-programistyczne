@@ -29,12 +29,24 @@ public class Portfolio {
 
 
     public Portfolio(int initialCash) {
+        //walidacja gotówki
+        if(initialCash < 0){
+            throw new IllegalArgumentException("Gotówka musi być większa od zera");
+        }
+
         this.cash = initialCash;
         this.holdings = new StockHolding[10];
         this.holdingsCount = 0;
     }
 
     public void addStock(Stock stock, int quantity) {
+        if(stock == null){
+            throw new IllegalArgumentException("Dodawana akcja nie może mieć wartości null");
+        }
+        if(quantity <= 0){
+            throw new IllegalArgumentException("Liczba dodawanych akcji nie może być mniejsza bądź równa 0");
+        }
+
         for (int i = 0; i < holdingsCount; i++) {
             if (holdings[i]!=null && holdings[i].stock!=null && holdings[i].stock.equals(stock)) {
                 holdings[i].quantity += quantity;
@@ -44,6 +56,8 @@ public class Portfolio {
             if (holdingsCount < holdings.length) {
                 holdings[holdingsCount] = new StockHolding(stock, quantity);
                 holdingsCount++;
+            } else if  (holdingsCount == holdings.length) {
+                throw new IllegalStateException("Nie można dodać więcej typów akcji");
             }
     }
 
@@ -62,10 +76,14 @@ public class Portfolio {
     }
 
     public int getStockQuantity(Stock stock){
+        if(stock == null){
+            throw new IllegalArgumentException("Akcja nie może mieć wartości null");
+        }
+
         for (int i = 0; i < holdingsCount; i++) {
             if (holdings[i]!=null && holdings[i].stock!=null && holdings[i].stock.equals(stock)) {
                 return holdings[i].quantity;
-            };
+            }
         } return 0;
     }
 }
