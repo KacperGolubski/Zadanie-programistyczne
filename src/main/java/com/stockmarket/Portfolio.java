@@ -29,7 +29,6 @@ public class Portfolio {
 
 
     public Portfolio(int initialCash) {
-        //walidacja gotówki
         if(initialCash < 0){
             throw new IllegalArgumentException("Gotówka musi być większa od zera");
         }
