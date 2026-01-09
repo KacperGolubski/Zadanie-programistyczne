@@ -1,9 +1,7 @@
 package com.stockmarket;
 
-import com.stockmarket.domain.Asset;
-import com.stockmarket.domain.Commodity;
-import com.stockmarket.domain.Currency;
-import com.stockmarket.domain.Share;
+import com.stockmarket.domain.*;
+import com.stockmarket.logic.Portfolio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,8 +23,8 @@ public class AssetTest {
     @Test
     void TestPriceGetter(){
         Asset testShare = new Share("CD Projekt", "CDP", 100.00, 20);
-
-        assertEquals(100, testShare.getInitialPrice(), "Cena aktywa nie zgadza się z oczekiwaną wartością");
+        testShare.setCurrentPrice(100.00);
+        assertEquals(100, testShare.getCurrentPrice(), "Cena aktywa nie zgadza się z oczekiwaną wartością");
     }
     @Test
     void TestQuantityGetter(){
@@ -190,22 +188,24 @@ public class AssetTest {
             int quantity;
 
         }
-
         assertFalse(asset1.equals(new TestClass()));
     }
     @Test
     void shouldReturnCorrectValueShare(){
         Asset share = new Share("CD Project", "CDP", 100.0, 10);
+        share.setCurrentPrice(100.0);
         assertEquals(995, share.calculateValue());
     }
     @Test
     void shouldReturnCorrectValueCommodity(){
         Asset commodity = new Commodity("Gold", "GLD", 100.0, 10, 5);
+        commodity.setCurrentPrice(100.0);
         assertEquals(950, commodity.calculateValue());
     }
     @Test
     void shouldReturnCorrectValueCurrency(){
         Asset currency = new Currency("Euro", "EUR", 100.0, 10, 5);
+        currency.setCurrentPrice(100.0);
         assertEquals(950, currency.calculateValue());
     }
     @Test
@@ -218,14 +218,15 @@ public class AssetTest {
     @Test
     void shouldSetCorrectQuantity(){
         Asset share = new Share("CD Project", "CDP", 100.0, 1);
-        share.setQuantity(100);
+        PurchaseLot lot = share.getPurchaseLots().get(0);
+        lot.setQuantity(100);
         assertEquals(100, share.getQuantity());
     }
     @Test
     void shouldSetCorrectInitialPrice(){
         Asset commodity = new Commodity("Gold", "GLD", 1.0, 10, 10);
-        commodity.setInitialPrice(12000.0);
-        assertEquals(12000.0, commodity.getInitialPrice());
+        commodity.setCurrentPrice(12000.0);
+        assertEquals(12000.0, commodity.getCurrentPrice());
     }
     @Test
     void shouldSetCorrectName(){
@@ -275,7 +276,7 @@ public class AssetTest {
         assertEquals("Opłata nie może być ujemna", exception.getMessage());
     }
     @Test
-    void shouldThrowExceptionWhenSetSpreadToZero(){
+    void shouldThrowExceptionWhenSetSpreadIsLessThanZero(){
         Currency currency = new Currency("Pound Sterling", "GBP", 1.0, 10, 0.05);
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
             currency.setCurrencySpread(-1);
@@ -295,5 +296,26 @@ public class AssetTest {
             Currency currency = new Currency("Pound Sterling", "GBP", 1.0, 10, -1);
         });
         assertEquals("Spread nie może być ujemny", exception.getMessage());
+    }
+    @Test
+    void shouldThrowExceptionWhenCommodityFeeIsLessThanZero2ndConstructor(){
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Commodity commodity = new Commodity("Gold", "GLD", -1);
+        });
+        assertEquals("Opłata nie może być ujemna", exception.getMessage());
+    }
+    @Test
+    void shouldThrowExceptionWhenSpreadIsLessThanZero2ndConstructor() {
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            Currency currency = new Currency("Pound Sterling", "GBP",-1);
+        });
+        assertEquals("Spread nie może być ujemny", exception.getMessage());
+    }
+    @Test
+    void shouldThrowExceptionWhenShareFeeIsLessThanZero2ndConstructor() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Share share = new Share("CD Project", "CDP", -1);
+        });
+        assertEquals("Opłata nie może być ujemna", exception.getMessage());
     }
 }
