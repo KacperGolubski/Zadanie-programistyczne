@@ -19,7 +19,7 @@ Stan portfela zapisywany jest w formacie tekstowym z użyciem separatora `|`. Pl
    `LOT|DATA_ISO_8601|ILOŚĆ|CENA_ZAKUPU`
 
 ### Przykładowy zapis:
-
+```
 CASH|15000.50
 ASSET|SHARE|AAPL|Apple Inc.|15.0|5.0
 LOT|2023-10-01T10:00:00|10.0|145.0
