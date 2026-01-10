@@ -368,6 +368,14 @@ public class PortfolioTest {
         });
         assertEquals("Lista jest pusta", exception.getMessage());
     }
+
+    @Test
+    void shouldThrowExceptionWhenAssetInWatchListIsNull() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            portfolio.addToWatchList(null);
+        });
+        assertEquals("Asset nie może być null",  exception.getMessage());
+    }
 }
 
 

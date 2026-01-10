@@ -81,26 +81,25 @@ public class OrderTest {
 
     @Test
     void shouldReturnCorrectToStringFormat() {
-        Order order = new Order("SuperFirma", "SPF", TransactionType.BUY, 10.0, 100.0);
-        assertTrue(order.toString().contains("SuperFirma")&&order.toString().contains("SPF")&&order.toString().contains("BUY"));
+        Order order = new Order("Apple", "AAPL", TransactionType.BUY, 10.0, 100.0);
+        String expectedString = String.format("%-10s | %-15s | %-5s | Ilość: %8.2f | Wartość: %10.2f PLN", TransactionType.BUY, "Apple", "AAPL", 10.0, 100.0);
+        assertEquals(expectedString, order.toString());
     }
 
     @Test
     void shouldPrioritizeHigherPriceForBuyOrders() {
-        // Dla BUY: wyższa cena ma pierwszeństwo (sortowanie malejące)
-        Order highPriceOrder = new Order("A", "A", TransactionType.BUY, 1, 200.0);
-        Order lowPriceOrder = new Order("B", "B", TransactionType.BUY, 1, 100.0);
-
-        assertTrue(highPriceOrder.compareTo(lowPriceOrder) < 0);
+        Order highPriceOrder = new Order("Higher", "H", TransactionType.BUY, 1, 200.0);
+        Order lowPriceOrder = new Order("Lower", "L", TransactionType.BUY, 1, 100.0);
+        assertEquals(-1, highPriceOrder.compareTo(lowPriceOrder));
     }
 
     @Test
     void shouldPrioritizeLowerPriceForSellOrders() {
-        // Dla SELL: niższa cena ma pierwszeństwo (sortowanie rosnące)
-        Order lowPriceOrder = new Order("A", "A", TransactionType.SELL, 1, 100.0);
-        Order highPriceOrder = new Order("B", "B", TransactionType.SELL, 1, 200.0);
-
-        assertTrue(lowPriceOrder.compareTo(highPriceOrder) < 0);
+        Order lowPriceOrder = new Order("Higher", "H", TransactionType.SELL, 1, 100.0);
+        Order highPriceOrder = new Order("Lower", "L", TransactionType.SELL, 1, 200.0);
+        assertEquals(-1, lowPriceOrder.compareTo(highPriceOrder));
     }
+
+
 }
 
