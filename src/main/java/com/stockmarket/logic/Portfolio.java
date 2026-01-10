@@ -148,6 +148,9 @@ public class Portfolio {
     }
     // WatchList
     public void addToWatchList(Asset asset) {
+        if(asset == null){
+            throw new IllegalArgumentException("Asset nie może być null");
+        }
         watchList.add(asset.toString());
     }
     public List<String> printWatchList(){
